@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "futedu_agent"  # This is the distribution name, not the import name
+version = "0.1.0"
+description = "LangGraph agent that can add numbers."
+readme = "README.md"
+requires-python = ">=3.9"
+
+dependencies = [
+  "langgraph>=0.0.30",
+  "langchain-openai>=0.1.0",
+  "langchain-core>=0.1.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["agent_logic*"]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8",
+  "black",
+  "ruff",
+]
