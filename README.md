@@ -13,9 +13,10 @@ A minimal LangChain-based LLM agent using OpenAI GPT and custom tools.
    ```bash
    pip install -r requirements.txt
    ```
-3. Set your OpenAI API key:
+3. Copy and fill in env vars:
    ```bash
-   export OPENAI_API_KEY=sk-...
+   cp .env.example .env
+   # then edit .env to add keys
    ```
 
 ## Usage
@@ -29,6 +30,10 @@ pytest tests/test_agent.py
 Or use the agent in your own code:
 
 ```python
-from agent_logic.agent import run_agent
-print(run_agent("Add 2 and 3."))
+from agent_logic.agent import get_agent_response
+from agent_logic.system_prompt import german_system_prompt
+from langchain_core.messages import SystemMessage
+
+messages = [SystemMessage(content=german_system_prompt)]
+print(get_agent_response("Addiere 2 und 3.", messages)[-1].content)
 ``` 
