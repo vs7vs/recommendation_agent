@@ -1,6 +1,6 @@
 # Agent Playground
 
-A minimal LangChain-based LLM agent using OpenAI GPT and custom tools.
+A minimal LangGraph/LangChain-based LLM agent using OpenAI GPT and custom tools.
 
 ## Setup
 
@@ -12,6 +12,8 @@ A minimal LangChain-based LLM agent using OpenAI GPT and custom tools.
 2. Install dependencies:
    ```bash
    pip install -r requirements.txt
+   # or, install the package in editable mode (recommended for development)
+   pip install -e .
    ```
 3. Copy and fill in env vars:
    ```bash
@@ -21,13 +23,19 @@ A minimal LangChain-based LLM agent using OpenAI GPT and custom tools.
 
 ## Usage
 
-Run the test to see the agent in action:
+Run the CLI agent (LangGraph-powered):
+
+```bash
+futedu-agent
+```
+
+Run the tests:
 
 ```bash
 pytest tests/test_agent.py
 ```
 
-Or use the agent in your own code:
+Or use the agent in your own code (programmatic API):
 
 ```python
 from agent_logic.agent import get_agent_response
@@ -36,4 +44,9 @@ from langchain_core.messages import SystemMessage
 
 messages = [SystemMessage(content=german_system_prompt)]
 print(get_agent_response("Addiere 2 und 3.", messages)[-1].content)
-``` 
+```
+
+## Notes
+
+- The conversation loop and routing are implemented with LangGraph.
+- Tools include web search, website scraping, and link discovery; configure API keys in `.env`.
