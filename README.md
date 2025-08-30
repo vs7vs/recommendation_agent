@@ -6,13 +6,13 @@ This project uses a sophisticated graph-based architecture to create a stateful 
 
 ---
 
-## 🎬 Demo
+<!-- ## 🎬 Demo
 
 A screenshot of the agent running in the terminal is a great way to showcase the project.
 
 ![Screenshot of the agent interacting in the terminal](path/to/your/screenshot.png)
 
-*A brief walkthrough of the agent in action within the terminal.*
+*A brief walkthrough of the agent in action within the terminal.* -->
 
 ---
 
