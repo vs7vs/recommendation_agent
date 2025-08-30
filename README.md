@@ -1,4 +1,4 @@
-# Conversational Fut-Edu Agent
+# Conversational Futedu Agent
 
 A conversational agent that uses LangGraph and external tools to provide intelligent, context-aware responses and perform tasks.
 

@@ -75,9 +75,22 @@ def find_links_tool(url: str) -> str:
     except Exception as e:
         return f"An error occurred while finding links: {e}"
 
+@tool
+def human_feedback_tool(question: str) -> str:
+    """
+    Use this tool when you need to ask the user a clarifying question,
+    get their feedback on a suggestion, or ask for more information.
+    The input to this tool is the exact question you want to ask the human.
+    """
+    # This tool is a signal. The function body doesn't need to do anything.
+    # The graph will interrupt when this tool is called.
+    return ""
+
 # --- Assemble the Final Tools List ---
+# Add the new tool to your list of tools
 tools = [
-    create_web_search_tool(), # Call the function to create the instance
+    create_web_search_tool(),
     scrape_website_tool,
-    find_links_tool
+    find_links_tool,
+    human_feedback_tool 
 ]

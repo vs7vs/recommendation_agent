@@ -7,7 +7,8 @@ from pydantic import SecretStr
 
 # --- Import project-specific components ---
 from agent.config import OPENAI_API_KEY
-from agent.tools import tools # <<< This import will now work correctly
+# vvv FIX IS HERE vvv
+from agent.tools import tools, human_feedback_tool # Import the specific tool function
 
 # --- Helper function to create the LLM ---
 def _create_llm(tools_to_bind):
@@ -19,7 +20,11 @@ def _create_llm(tools_to_bind):
     except ImportError:
         raise ImportError("Please install langchain-openai with 'poetry add langchain-openai'")
 
-    llm = ChatOpenAI(api_key=SecretStr(OPENAI_API_KEY), model="gpt-4o", temperature=0.7)
+    llm = ChatOpenAI(
+        api_key=SecretStr(OPENAI_API_KEY),
+        model="gpt-4o",
+        temperature=0.7
+    )
     return llm.bind_tools(tools_to_bind)
 
 # --- 1. Define the Agent State ---
@@ -38,12 +43,19 @@ def llm_node(state: AgentState):
 
 # --- 3. Define the Conditional Edge Logic ---
 def should_continue(state: AgentState) -> str:
-    """Determines the next step for the agent."""
+    """
+    Determines the next step for the agent.
+    This is the router that decides between using tools, asking for human feedback, or finishing.
+    """
     last_message = state["messages"][-1]
-    if getattr(last_message, "tool_calls", None):
-        return "tools"
-    if isinstance(last_message, AIMessage) and "[PAUSE_FOR_INPUT]" in last_message.content:
-        return "human"
+    
+    if tool_calls := getattr(last_message, "tool_calls", None):
+        # Now this check will work correctly because human_feedback_tool is defined
+        if tool_calls[0]['name'] == human_feedback_tool.name:
+            return "human"
+        else:
+            return "tools"
+        
     return END
 
 # --- 4. Assemble the Graph ---
