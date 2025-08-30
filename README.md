@@ -1,49 +1,51 @@
-# Conversational Movie Recommender Agent
+# Conversational Fut-Edu Agent
 
-A conversational agent built with Streamlit and LangChain that provides personalized movie recommendations using OpenAI's powerful language models.
+A conversational agent that uses LangGraph and external tools to provide intelligent, context-aware responses and perform tasks.
 
-This project moves beyond traditional recommendation systems by creating an interactive, chat-based experience. Users can converse with the agent, specify their preferences in natural language, and receive movie suggestions in a dynamic and engaging way.
+This project uses a sophisticated graph-based architecture to create a stateful agent capable of complex interactions. It can use tools like web search and website scraping to gather information, reason about it, and even pause to ask the user for clarification before completing its tasks.
 
-
-<!-- ---
+---
 
 ## 🎬 Demo
 
-![Project Demo GIF](https://user-images.githubusercontent.com/username/repo/your_demo.gif)
+A screenshot of the agent running in the terminal is a great way to showcase the project.
 
-*A brief walkthrough of the Recommender Agent in action.*
+![Screenshot of the agent interacting in the terminal](path/to/your/screenshot.png)
 
---- -->
+*A brief walkthrough of the agent in action within the terminal.*
+
+---
 
 ## 🚀 Key Features
 
-* **Conversational Interface:** Chat with the agent in natural language to get movie recommendations.
-* **LLM-Powered Intelligence:** Leverages OpenAI's GPT models via LangChain to understand context and user preferences.
-* **Stateful Memory:** Remembers previous parts of the conversation to provide more relevant suggestions over time.
-* **Simple Web UI:** A clean and user-friendly interface built with the Streamlit framework.
+* **Graph-Based Logic:** Built with LangGraph for robust, stateful, and cyclical reasoning.
+* **Tool Usage:** Can use external tools like web search and website scraping to answer questions and complete tasks.
+* **Interactive Terminal UI:** A clean and readable command-line interface powered by the Rich library.
+* **Human-in-the-Loop:** The agent can pause and ask for clarifying input from the user before continuing its task.
+* **LLM-Powered Intelligence:** Leverages OpenAI's GPT models to understand context, make decisions, and generate responses.
 
 ---
 
 ## 🛠️ Technologies Used
 
 * **Language:** Python 3
-* **Web Framework:** Streamlit
-* **LLM Orchestration:** LangChain
-* **AI Model:** OpenAI
-* **Dependency Management:** Poetry
+* **LLM Orchestration:** LangChain & LangGraph
+* **Terminal UI:** Rich
+* **AI Model:** OpenAI (GPT-4o)
 
 ---
 
 ## ⚙️ Getting Started
 
-Follow these instructions to get the recommender agent running on your local machine.
+Follow these instructions to get the agent running on your local machine.
 
-### Prerequisites
+### ### Prerequisites
 
 * Python 3.9+
-* An OpenAI API Key.
+* An OpenAI API Key
+* A Tavily API Key (for the web search tool)
 
-### Installation
+### ### Installation
 
 1.  **Clone the repository:**
     ```sh
@@ -58,29 +60,30 @@ Follow these instructions to get the recommender agent running on your local mac
     ```
 
 3.  **Set up your environment variables:**
-    Create a file named `.env` in the root directory of the project. Add your OpenAI API key to this file:
+    Create a file named `.env` in the root directory and add your API keys:
     ```
-    # .env
+    # .env file
     OPENAI_API_KEY="sk-YourSecretOpenAI_ApiKey"
+    TAVILY_API_KEY="tvly-YourSecretTavily_ApiKey"
     ```
 
 ---
 
-## Usage
+## ## Usage
 
-Once the installation is complete, you can run the Streamlit application.
+Once the installation is complete, you can run the application from your terminal.
 
 1.  **Activate the virtual environment managed by Poetry:**
     ```sh
     poetry shell
     ```
 
-2.  **Run the Streamlit app:**
+2.  **Run the application:**
     ```sh
-    streamlit run main.py
+    python main.py
     ```
 
-3.  Open your web browser and navigate to `http://localhost:8501`. You can now start chatting with the recommender agent!
+3.  The agent will start in your terminal. Follow the on-screen prompts to begin the conversation.
 
 ---
 
