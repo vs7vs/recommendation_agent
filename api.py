@@ -13,10 +13,7 @@ agent = create_agent_graph()
 app = FastAPI(title="Futedu Agent API", version="1.0.0")
 
 # --- CORS Middleware ---
-origins = [
-    "https://recommendation-agent.vercel.app", 
-    "https://recommendation-agent-rktg9ribz-vs7s-projects.vercel.app", 
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
