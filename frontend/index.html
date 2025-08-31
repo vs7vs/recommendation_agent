@@ -1,298 +1,507 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futedu Agent Chat</title>
-    <style>
-        :root {
-            --body-bg: #f4f7f6;
-            --chat-bg: #ffffff;
-            --user-bubble-bg: #007bff;
-            --user-bubble-color: #ffffff;
-            --agent-bubble-bg: #e9ecef;
-            --agent-bubble-color: #333333;
-            --input-bg: #ffffff;
-            --card-bg: #f8f9fa;
-            --card-border: #dee2e6;
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
 
-        body {
-            font-family: var(--font-family);
-            background-color: var(--body-bg);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<meta charset="UTF-8">
 
-        .chat-container {
-            width: 90%;
-            max-width: 600px;
-            height: 90vh;
-            max-height: 800px;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--chat-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        .chat-header {
-            padding: 20px;
-            background-color: var(--user-bubble-bg);
-            color: var(--user-bubble-color);
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
+<title>Futedu Agent Chat</title>
 
-        .chat-box {
-            flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
+<style>
 
-        .chat-bubble {
-            max-width: 75%;
-            padding: 12px 18px;
-            border-radius: 20px;
-            margin-bottom: 10px;
-            line-height: 1.5;
-            word-wrap: break-word;
-        }
+:root {
 
-        .user-bubble {
-            background-color: var(--user-bubble-bg);
-            color: var(--user-bubble-color);
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
+--body-bg: #f4f7f6;
 
-        .agent-bubble {
-            background-color: var(--agent-bubble-bg);
-            color: var(--agent-bubble-color);
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-        }
-        
-        /* New Styles for Recommendation Cards */
-        .recommendation-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 10px;
-            align-self: flex-start;
-            width: 90%;
-        }
-        .recommendation-card h3 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            color: var(--user-bubble-bg);
-        }
-        .recommendation-card p {
-            margin: 5px 0;
-            font-size: 0.95rem;
-        }
-        .recommendation-card strong {
-            color: #333;
-        }
+--chat-bg: #ffffff;
 
-        .loading-bubble {
-            align-self: flex-start;
-            display: flex;
-            align-items: center;
-            padding: 12px 18px;
-        }
+--user-bubble-bg: #007bff;
 
-        .loading-bubble .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #888;
-            margin: 0 4px;
-            animation: bounce 1.4s infinite ease-in-out both;
-        }
+--user-bubble-color: #ffffff;
 
-        .loading-bubble .dot:nth-child(1) { animation-delay: -0.32s; }
-        .loading-bubble .dot:nth-child(2) { animation-delay: -0.16s; }
+--agent-bubble-bg: #e9ecef;
 
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1.0); }
-        }
+--agent-bubble-color: #333333;
 
-        .chat-form {
-            display: flex;
-            padding: 20px;
-            border-top: 1px solid #ddd;
-        }
+--input-bg: #ffffff;
 
-        #userInput {
-            flex-grow: 1;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            padding: 10px 15px;
-            font-size: 1rem;
-            outline: none;
-        }
+--font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-        #userInput:focus {
-            border-color: var(--user-bubble-bg);
-            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
-        }
+}
 
-        #sendButton {
-            border: none;
-            background-color: var(--user-bubble-bg);
-            color: var(--user-bubble-color);
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            margin-left: 10px;
-            cursor: pointer;
-            font-size: 1.5rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
+
+
+body {
+
+font-family: var(--font-family);
+
+background-color: var(--body-bg);
+
+margin: 0;
+
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+height: 100vh;
+
+}
+
+
+
+.chat-container {
+
+width: 90%;
+
+max-width: 600px;
+
+height: 90vh;
+
+max-height: 800px;
+
+display: flex;
+
+flex-direction: column;
+
+background-color: var(--chat-bg);
+
+border-radius: 12px;
+
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+overflow: hidden;
+
+}
+
+
+
+.chat-header {
+
+padding: 20px;
+
+background-color: var(--user-bubble-bg);
+
+color: var(--user-bubble-color);
+
+text-align: center;
+
+font-size: 1.2rem;
+
+font-weight: 600;
+
+}
+
+
+
+.chat-box {
+
+flex-grow: 1;
+
+padding: 20px;
+
+overflow-y: auto;
+
+display: flex;
+
+flex-direction: column;
+
+}
+
+
+
+.chat-bubble {
+
+max-width: 75%;
+
+padding: 12px 18px;
+
+border-radius: 20px;
+
+margin-bottom: 10px;
+
+line-height: 1.5;
+
+word-wrap: break-word;
+
+}
+
+
+
+.user-bubble {
+
+background-color: var(--user-bubble-bg);
+
+color: var(--user-bubble-color);
+
+align-self: flex-end;
+
+border-bottom-right-radius: 4px;
+
+}
+
+
+
+.agent-bubble {
+
+background-color: var(--agent-bubble-bg);
+
+color: var(--agent-bubble-color);
+
+align-self: flex-start;
+
+border-bottom-left-radius: 4px;
+
+}
+
+
+.loading-bubble {
+
+align-self: flex-start;
+
+display: flex;
+
+align-items: center;
+
+padding: 12px 18px;
+
+}
+
+
+
+.loading-bubble .dot {
+
+width: 8px;
+
+height: 8px;
+
+border-radius: 50%;
+
+background-color: #888;
+
+margin: 0 4px;
+
+animation: bounce 1.4s infinite ease-in-out both;
+
+}
+
+
+
+.loading-bubble .dot:nth-child(1) { animation-delay: -0.32s; }
+
+.loading-bubble .dot:nth-child(2) { animation-delay: -0.16s; }
+
+
+
+@keyframes bounce {
+
+0%, 80%, 100% { transform: scale(0); }
+
+40% { transform: scale(1.0); }
+
+}
+
+
+
+.chat-form {
+
+display: flex;
+
+padding: 20px;
+
+border-top: 1px solid #ddd;
+
+}
+
+
+
+#userInput {
+
+flex-grow: 1;
+
+border: 1px solid #ccc;
+
+border-radius: 20px;
+
+padding: 10px 15px;
+
+font-size: 1rem;
+
+outline: none;
+
+}
+
+
+
+#userInput:focus {
+
+border-color: var(--user-bubble-bg);
+
+box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+
+}
+
+
+
+#sendButton {
+
+border: none;
+
+background-color: var(--user-bubble-bg);
+
+color: var(--user-bubble-color);
+
+border-radius: 50%;
+
+width: 45px;
+
+height: 45px;
+
+margin-left: 10px;
+
+cursor: pointer;
+
+font-size: 1.5rem;
+
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+}
+
+</style>
+
 </head>
+
 <body>
 
-    <div class="chat-container">
-        <div class="chat-header">Futedu Agent Chat</div>
-        <div class="chat-box" id="chatBox">
-            <div class="chat-bubble agent-bubble">Hallo! Beschreibe kurz deine Interessen und Fähigkeiten. Auch was dir besonders wichtig ist ist interessant.</div>
-        </div>
-        <form class="chat-form" id="chatForm">
-            <input type="text" id="userInput" placeholder="Schreiben Sie eine Nachricht..." autocomplete="off">
-            <button type="submit" id="sendButton">➤</button>
-        </form>
-    </div>
 
-    <script>
-        // --- CONFIGURATION ---
-        // IMPORTANT: Replace this with your actual Render API URL
-        const API_URL = "https://recommendation-agent.onrender.com/chat";
 
-        // --- DOM Elements ---
-        const chatForm = document.getElementById('chatForm');
-        const userInput = document.getElementById('userInput');
-        const chatBox = document.getElementById('chatBox');
-        const sendButton = document.getElementById('sendButton');
+<div class="chat-container">
 
-        // --- STATE ---
-        let chatHistory = [];
+<div class="chat-header">Futedu Agent Chat</div>
 
-        /**
-         * Appends a simple text message to the chat box UI.
-         */
-        function addMessageToUI(sender, message) {
-            const bubble = document.createElement('div');
-            bubble.classList.add('chat-bubble');
-            bubble.classList.add(sender === 'user' ? 'user-bubble' : 'agent-bubble');
-            bubble.textContent = message;
-            chatBox.appendChild(bubble);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+<div class="chat-box" id="chatBox">
 
-        /**
-         * Renders structured recommendations as styled cards.
-         */
-        function renderRecommendations(response) {
-            // Add the summary message first, if it exists
-            if (response.summary) {
-                addMessageToUI('agent', response.summary);
-            }
+<div class="chat-bubble agent-bubble">Hallo! Beschreibe kurz deine Interessen und Fähigkeiten. Auch was dir besonders wichtig ist ist interessant.</div>
 
-            // Loop through each recommendation and create a card for it
-            response.recommendations.forEach(rec => {
-                const card = document.createElement('div');
-                card.classList.add('recommendation-card');
-                
-                card.innerHTML = `
-                    <h3>${rec.title}</h3>
-                    <p><strong>Einkommen:</strong> ${rec.income}</p>
-                    <p><strong>Begründung:</strong> ${rec.reasoning}</p>
-                `;
-                chatBox.appendChild(card);
-            });
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+</div>
 
-        /**
-         * Handles the form submission event.
-         */
-        async function handleFormSubmit(event) {
-            event.preventDefault();
-            
-            const userMessage = userInput.value.trim();
-            if (!userMessage) return;
+<form class="chat-form" id="chatForm">
 
-            addMessageToUI('user', userMessage);
-            chatHistory.push({ type: 'human', content: userMessage });
+<input type="text" id="userInput" placeholder="Schreiben Sie eine Nachricht..." autocomplete="off">
 
-            userInput.value = '';
-            userInput.disabled = true;
-            sendButton.disabled = true;
-            
-            const loadingBubble = document.createElement('div');
-            loadingBubble.classList.add('agent-bubble', 'loading-bubble');
-            loadingBubble.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
-            chatBox.appendChild(loadingBubble);
-            chatBox.scrollTop = chatBox.scrollHeight;
+<button type="submit" id="sendButton">➤</button>
 
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        user_input: userMessage,
-                        chat_history: chatHistory.slice(0, -1)
-                    })
-                });
+</form>
 
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.statusText}`);
-                }
+</div>
 
-                const data = await response.json();
-                const agentResponse = data.response;
 
-                // Add agent's full response (could be string or object) to history
-                chatHistory.push({ type: 'ai', content: agentResponse });
-                chatBox.removeChild(loadingBubble);
 
-                // --- vvv NEW LOGIC HERE vvv ---
-                // Check if the response is a structured JSON with recommendations
-                if (typeof agentResponse === 'object' && agentResponse.recommendations) {
-                    renderRecommendations(agentResponse);
-                } else {
-                    // Otherwise, handle it as a simple text message
-                    addMessageToUI('agent', agentResponse);
-                }
+<script>
 
-            } catch (error) {
-                console.error("Error fetching from API:", error);
-                chatBox.removeChild(loadingBubble);
-                addMessageToUI('agent', 'Sorry, something went wrong. Please try again.');
-            } finally {
-                userInput.disabled = false;
-                sendButton.disabled = false;
-                userInput.focus();
-            }
-        }
+// --- CONFIGURATION ---
 
-        // --- EVENT LISTENERS ---
-        chatForm.addEventListener('submit', handleFormSubmit);
-    </script>
+// IMPORTANT: Replace this with your actual Render API URL
+
+const API_URL = "https://recommendation-agent.onrender.com/chat";
+
+
+
+// --- DOM Elements ---
+
+const chatForm = document.getElementById('chatForm');
+
+const userInput = document.getElementById('userInput');
+
+const chatBox = document.getElementById('chatBox');
+
+const sendButton = document.getElementById('sendButton');
+
+
+
+// --- STATE ---
+
+// This array will store the entire conversation history
+
+let chatHistory = [];
+
+
+
+// --- FUNCTIONS ---
+
+
+
+/**
+
+* Appends a message to the chat box UI.
+
+* @param {string} sender - 'user' or 'agent'.
+
+* @param {string} message - The message content.
+
+*/
+
+function addMessageToUI(sender, message) {
+
+const bubble = document.createElement('div');
+
+bubble.classList.add('chat-bubble');
+
+bubble.classList.add(sender === 'user' ? 'user-bubble' : 'agent-bubble');
+
+bubble.textContent = message;
+
+chatBox.appendChild(bubble);
+
+// Scroll to the bottom of the chat box
+
+chatBox.scrollTop = chatBox.scrollHeight;
+
+}
+
+
+
+/**
+
+* Handles the form submission event.
+
+* @param {Event} event - The form submission event.
+
+*/
+
+async function handleFormSubmit(event) {
+
+event.preventDefault(); // Prevent the default form submission (page reload)
+
+
+const userMessage = userInput.value.trim();
+
+if (!userMessage) return; // Don't send empty messages
+
+
+
+// Add user's message to UI and history
+
+addMessageToUI('user', userMessage);
+
+chatHistory.push({ type: 'human', content: userMessage });
+
+
+
+// Clear the input field and disable the form
+
+userInput.value = '';
+
+userInput.disabled = true;
+
+sendButton.disabled = true;
+
+
+// Show loading indicator
+
+const loadingBubble = document.createElement('div');
+
+loadingBubble.classList.add('agent-bubble', 'loading-bubble');
+
+loadingBubble.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+
+chatBox.appendChild(loadingBubble);
+
+chatBox.scrollTop = chatBox.scrollHeight;
+
+
+
+
+
+try {
+
+// Send the request to the API
+
+const response = await fetch(API_URL, {
+
+method: 'POST',
+
+headers: { 'Content-Type': 'application/json' },
+
+body: JSON.stringify({
+
+user_input: userMessage,
+
+chat_history: chatHistory.slice(0, -1) // Send history *before* the current message
+
+})
+
+});
+
+
+
+if (!response.ok) {
+
+throw new Error(`API error: ${response.statusText}`);
+
+}
+
+
+
+const data = await response.json();
+
+const agentMessage = data.response;
+
+
+
+// Add agent's message to history
+
+chatHistory.push({ type: 'ai', content: agentMessage });
+
+
+// Remove loading indicator and add agent's message
+
+chatBox.removeChild(loadingBubble);
+
+addMessageToUI('agent', agentMessage);
+
+
+
+} catch (error) {
+
+console.error("Error fetching from API:", error);
+
+chatBox.removeChild(loadingBubble);
+
+addMessageToUI('agent', 'Sorry, something went wrong. Please try again.');
+
+} finally {
+
+// Re-enable the form
+
+userInput.disabled = false;
+
+sendButton.disabled = false;
+
+userInput.focus();
+
+}
+
+}
+
+
+
+// --- EVENT LISTENERS ---
+
+chatForm.addEventListener('submit', handleFormSubmit);
+
+
+
+</script>
+
 </body>
-</html>
 
+</html>
