@@ -8,7 +8,7 @@
         :root {
             --body-bg: #f4f7f6;
             --chat-bg: #ffffff;
-            --user-bubble-bg: #007bff;
+            --user-bubble-bg: #181826;
             --user-bubble-color: #ffffff;
             --agent-bubble-bg: #e9ecef;
             --agent-bubble-color: #333333;
@@ -255,7 +255,17 @@
         /**
          * Renders the structured recommendation data into styled cards.
          */
-         function renderRecommendations(data) {
+        function renderRecommendations(data) {
+            console.log("renderRecommendations received:", data);
+
+            if (data.recommendations && Array.isArray(data.recommendations)) {
+                data.recommendations.forEach((rec, idx) => {
+                console.log(`Recommendation #${idx}:`, rec);
+                console.log("title:", rec.title, "type:", typeof rec.title);
+                console.log("income:", rec.income, "type:", typeof rec.income);
+                console.log("reasoning:", rec.reasoning, "type:", typeof rec.reasoning);
+                });
+            }
             if (data.summary) {
                 const summaryBubble = document.createElement('div');
                 summaryBubble.classList.add('summary-bubble');
@@ -271,10 +281,10 @@
                 const card = document.createElement('div');
                 card.classList.add('recommendation-card');
                 card.innerHTML = `
-                    <h3>${escapeHtml(rec.title || '')}</h3>
-                    <p><strong>Einkommen:</strong> ${formatValue(rec.income)}</p>
-                    <p><strong>Begründung:</strong> ${formatValue(rec.reasoning)}</p>
-                `;
+                    <h3>${rec.title || ''}</h3>
+                    <p><strong>Einkommen:</strong> ${JSON.stringify(rec.income)}</p>
+                    <p><strong>Begründung:</strong> ${JSON.stringify(rec.reasoning)}</p>
+                    `;
                 chatBox.appendChild(card);
                 });
             }
@@ -326,7 +336,9 @@
                 }
 
                 const data = await response.json();
+                console.log("Raw response from API:", data);
                 const agentResponse = data.response;
+                console.log("agentResponse:", agentResponse, "type:", typeof agentResponse);
                 
                 // This is the crucial logic block. It ensures the correct function is called.
                 if (typeof agentResponse === 'object' && agentResponse !== null) {
