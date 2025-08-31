@@ -56,7 +56,8 @@ def chat_with_agent(request: ChatRequest):
     for step in agent.stream({"messages": messages}):
         final_state = step
 
-    last_message = next(iter(final_state.values()))["messages"][-1]
+    last_step_output = list(final_state.values())[0] 
+    last_message = last_step_output["messages"][-1]
     final_response_str = last_message.content
 
     if not final_response_str and hasattr(last_message, "tool_calls") and last_message.tool_calls:
