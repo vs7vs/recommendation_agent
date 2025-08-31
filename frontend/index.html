@@ -294,7 +294,7 @@
         /**
          * Handles the form submission event.
          */
-        async function handleFormSubmit(event) {
+         async function handleFormSubmit(event) {
             event.preventDefault();
             const userMessage = userInput.value.trim();
             if (!userMessage) return;
@@ -315,7 +315,6 @@
             try {
                 const payload = {
                     user_input: userMessage,
-                    // Send the full history, the backend can slice if needed
                     chat_history: chatHistory.slice(0, -1) 
                 };
                 
@@ -325,33 +324,39 @@
                     body: JSON.stringify(payload)
                 });
                 
-                // Remove the loading bubble as soon as we get a response
                 chatBox.removeChild(loadingBubble);
 
                 if (!response.ok) {
-                    // Try to get a more detailed error message from the API response
                     const errorData = await response.json().catch(() => null);
                     const detail = errorData?.detail || response.statusText;
                     throw new Error(`API error: ${detail}`);
                 }
 
                 const data = await response.json();
-                console.log("Raw response from API:", data);
-                const agentResponse = data.response;
-                console.log("agentResponse:", agentResponse, "type:", typeof agentResponse);
-                
-                // This is the crucial logic block. It ensures the correct function is called.
+                let agentResponse = data.response; // Use 'let' to allow modification
+
+                // --- THIS IS THE FIX ---
+                // Check if the response is a string that might contain JSON
+                if (typeof agentResponse === 'string') {
+                    try {
+                        // Try to parse it. If it succeeds, it's an object.
+                        const parsed = JSON.parse(agentResponse);
+                        // If parsing worked, replace the string with the object
+                        agentResponse = parsed; 
+                    } catch (e) {
+                        // If it fails, it's just a regular string. Do nothing.
+                    }
+                }
+                // --- END FIX ---
+
+                // Your original logic will now work correctly
                 if (typeof agentResponse === 'object' && agentResponse !== null) {
-                    // If the response is an object, it's for recommendations.
-                    // Use the special rendering function.
+                    // This block will now execute for recommendations
                     renderRecommendations(agentResponse);
-                    // For the history, save the object as a string.
                     chatHistory.push({ type: 'ai', content: JSON.stringify(agentResponse) });
                 } else {
-                    // If the response is NOT an object, it's a simple text message.
-                    // Use the simple text message function.
+                    // This block will execute for simple text messages
                     addMessageToUI('agent', agentResponse);
-                    // For the history, save the string directly.
                     chatHistory.push({ type: 'ai', content: agentResponse });
                 }
 
@@ -367,7 +372,6 @@
                 userInput.focus();
             }
         }
-
         // --- EVENT LISTENERS ---
         chatForm.addEventListener('submit', handleFormSubmit);
     </script>
