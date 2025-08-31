@@ -242,7 +242,7 @@
         /**
          * Handles the form submission event.
          */
-        async function handleFormSubmit(event) {
+         async function handleFormSubmit(event) {
             event.preventDefault();
             const userMessage = userInput.value.trim();
             if (!userMessage) return;
@@ -261,11 +261,9 @@
             chatBox.scrollTop = chatBox.scrollHeight;
 
             try {
-                // Construct the request payload
                 const payload = {
                     user_input: userMessage,
-                    chat_history: chatHistory.slice(0, -1),
-                    // No need to send tool_call_id anymore, the new API handles this logic
+                    chat_history: chatHistory.slice(0, -1)
                 };
                 
                 const response = await fetch(API_URL, {
@@ -279,22 +277,28 @@
                 const data = await response.json();
                 const agentResponse = data.response;
                 
+                // 1. Remove the loading bubble FIRST for a smooth transition
                 chatBox.removeChild(loadingBubble);
 
-                // Check the type of the agent's response to decide how to display it
-                if (typeof agentResponse === 'object' && agentResponse.recommendations) {
+                // 2. Use a single, clean block to handle the response
+                if (typeof agentResponse === 'object' && agentResponse !== null) {
+                    // It's a JSON object for recommendations
                     renderRecommendations(agentResponse);
-                    // Save the string version of the JSON to history for the next request
+                    // Push the GUARANTEED-STRING version to the history
                     chatHistory.push({ type: 'ai', content: JSON.stringify(agentResponse) });
                 } else {
-                    // Otherwise, handle it as a simple text message (e.g., a question from the agent)
+                    // It's a simple text message
                     addMessageToUI('agent', agentResponse);
+                    // Push the GUARANTEED-STRING version to the history
                     chatHistory.push({ type: 'ai', content: agentResponse });
                 }
 
             } catch (error) {
                 console.error("Error fetching from API:", error);
-                chatBox.removeChild(loadingBubble);
+                // Make sure to remove the loading bubble even if there's an error
+                if (chatBox.contains(loadingBubble)) {
+                    chatBox.removeChild(loadingBubble);
+                }
                 addMessageToUI('agent', 'Sorry, something went wrong. Please try again.');
             } finally {
                 userInput.disabled = false;
@@ -302,7 +306,6 @@
                 userInput.focus();
             }
         }
-
         // --- EVENT LISTENERS ---
         chatForm.addEventListener('submit', handleFormSubmit);
     </script>
