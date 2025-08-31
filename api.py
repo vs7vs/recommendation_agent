@@ -1,4 +1,4 @@
-import json # <-- Import the json module
+import json
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 from typing import List
@@ -40,18 +40,33 @@ def chat_with_agent(request: ChatRequest):
             messages.append(AIMessage(content=item.content))
     
     messages.append(HumanMessage(content=request.user_input))
-    result = agent.invoke({"messages": messages})
-    final_response_str = result["messages"][-1].content
+
+    print("--- Invoking agent with messages: ---")
+    print(messages)
     
-    # vvv IMPORTANT CHANGE HERE vvv
+    result = agent.invoke({"messages": messages})
+    
+    print("\n--- Full agent result from invoke: ---")
+    print(result)
+
+    if not result.get("messages"):
+        print("!!! ERROR: Agent result has no 'messages' key.")
+        return {"response": "Error: Agent returned no messages."}
+
+    final_message = result["messages"][-1]
+    print("\n--- Final message object from agent: ---")
+    print(final_message)
+    print("--------------------------------------\n")
+
+    final_response_str = final_message.content
+    
     try:
-        # Try to parse the agent's response as JSON
         final_response_json = json.loads(final_response_str)
         return {"response": final_response_json}
-    except json.JSONDecodeError:
-        # If it's not valid JSON, send it as plain text
-        return {"response": final_response_str}
+    except (json.JSONDecodeError, TypeError): # Added TypeError for safety
+        return {"response": final_response_str if final_response_str is not None else ""}
 
 @app.get("/")
 def read_root():
     return {"message": "API is running."}
+
