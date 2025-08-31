@@ -198,7 +198,7 @@
 
         // --- STATE ---
         let chatHistory = [];
-        let currentToolCallId = null; // Stores the ID of a tool call the agent wants us to respond to
+        let currentToolCallId = null; 
 
         // --- FUNCTIONS ---
 
@@ -265,12 +265,9 @@
                 const payload = {
                     user_input: userMessage,
                     chat_history: chatHistory.slice(0, -1),
-                    tool_call_id: currentToolCallId // Send the stored tool_call_id if it exists
+                    // No need to send tool_call_id anymore, the new API handles this logic
                 };
                 
-                // Reset the tool call ID after sending it
-                currentToolCallId = null;
-
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -282,11 +279,6 @@
                 const data = await response.json();
                 const agentResponse = data.response;
                 
-                // Store the new tool_call_id if the agent provides one for the next turn
-                if (data.tool_call_id) {
-                    currentToolCallId = data.tool_call_id;
-                }
-
                 chatBox.removeChild(loadingBubble);
 
                 // Check the type of the agent's response to decide how to display it
