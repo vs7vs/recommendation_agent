@@ -1,4 +1,4 @@
--e git+ssh://git@github.com/vs7vs/recommendation_agent.git@b6cb4dc90695e5e55ce65b81aef96b6b81f361f7#egg=agent_logic
+
 aiohappyeyeballs==2.6.1
 aiohttp==3.12.14
 aiosignal==1.4.0
@@ -17,7 +17,6 @@ distro==1.9.0
 docker==7.1.0
 fastapi==0.116.1
 frozenlist==1.7.0
--e git+ssh://git@github.com/vs7vs/recommendation_agent.git@b6cb4dc90695e5e55ce65b81aef96b6b81f361f7#egg=futedu_agent
 gitdb==4.0.12
 GitPython==3.1.45
 gunicorn==23.0.0
