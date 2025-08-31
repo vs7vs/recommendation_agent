@@ -1,3 +1,4 @@
+-e git+ssh://git@github.com/vs7vs/recommendation_agent.git@b6cb4dc90695e5e55ce65b81aef96b6b81f361f7#egg=agent_logic
 aiohappyeyeballs==2.6.1
 aiohttp==3.12.14
 aiosignal==1.4.0
@@ -13,10 +14,13 @@ charset-normalizer==3.4.2
 click==8.2.1
 dataclasses-json==0.6.7
 distro==1.9.0
+docker==7.1.0
 fastapi==0.116.1
 frozenlist==1.7.0
+-e git+ssh://git@github.com/vs7vs/recommendation_agent.git@b6cb4dc90695e5e55ce65b81aef96b6b81f361f7#egg=futedu_agent
 gitdb==4.0.12
 GitPython==3.1.45
+gunicorn==23.0.0
 h11==0.16.0
 httpcore==1.0.9
 httptools==0.6.4
@@ -30,16 +34,16 @@ jsonpatch==1.33
 jsonpointer==3.0.0
 jsonschema==4.25.1
 jsonschema-specifications==2025.4.1
-langchain==0.3.26
-langchain-community==0.3.27
-langchain-core==0.3.68
-langchain-openai==0.3.28
+langchain==0.3.27
+langchain-community==0.3.29
+langchain-core==0.3.75
+langchain-openai==0.3.32
 langchain-tavily==0.2.8
-langchain-text-splitters==0.3.8
-langgraph==0.5.3
+langchain-text-splitters==0.3.10
+langgraph==0.6.6
 langgraph-checkpoint==2.1.0
-langgraph-prebuilt==0.5.2
-langgraph-sdk==0.1.73
+langgraph-prebuilt==0.6.4
+langgraph-sdk==0.2.4
 langsmith==0.4.5
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
@@ -49,7 +53,7 @@ multidict==6.6.3
 mypy_extensions==1.1.0
 narwhals==2.2.0
 numpy==2.3.1
-openai==1.95.1
+openai==1.102.0
 orjson==3.10.18
 ormsgpack==1.10.0
 packaging==24.2
@@ -71,7 +75,7 @@ pytz==2025.2
 PyYAML==6.0.2
 referencing==0.36.2
 regex==2024.11.6
-requests==2.32.4
+requests==2.32.5
 requests-toolbelt==1.0.0
 rich==14.0.0
 rpds-py==0.27.1
@@ -99,5 +103,3 @@ websockets==15.0.1
 xxhash==3.5.0
 yarl==1.20.1
 zstandard==0.23.0
-
-gunicorn
