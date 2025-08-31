@@ -111,6 +111,17 @@
             margin-bottom: 15px;
             font-style: italic;
         }
+
+        .json-block {
+            white-space: pre-wrap;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+            font-size: 0.9rem;
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 8px 0 0 0;
+        }
         
         .loading-bubble {
             align-self: flex-start;
@@ -206,35 +217,65 @@
         /**
          * Appends a simple text message to the chat box UI.
          */
-        function addMessageToUI(sender, message) {
+         function addMessageToUI(sender, message) {
             const bubble = document.createElement('div');
             bubble.classList.add('chat-bubble', sender === 'user' ? 'user-bubble' : 'agent-bubble');
-            bubble.textContent = message;
+
+            if (typeof message === 'object' && message !== null) {
+                bubble.innerHTML = `<div>${formatValue(message)}</div>`;
+            } else {
+                bubble.textContent = message;
+            }
+
             chatBox.appendChild(bubble);
             chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        function escapeHtml(str) {
+        return String(str)
+            .replaceAll('&','&amp;')
+            .replaceAll('<','&lt;')
+            .replaceAll('>','&gt;')
+            .replaceAll('"','&quot;')
+            .replaceAll("'",'&#039;');
+        }
+
+        function formatValue(val) {
+        if (val === null || val === undefined) return 'N/A';
+        if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+            return escapeHtml(String(val));
+        }
+        if (Array.isArray(val)) {
+            // join primitive arrays nicely; stringify objects inside arrays
+            return val.map(v => (typeof v === 'object' ? JSON.stringify(v) : String(v))).join(', ');
+        }
+        // objects -> pretty JSON block
+        return `<pre class="json-block">${escapeHtml(JSON.stringify(val, null, 2))}</pre>`;
         }
 
         /**
          * Renders the structured recommendation data into styled cards.
          */
-        function renderRecommendations(data) {
+         function renderRecommendations(data) {
             if (data.summary) {
                 const summaryBubble = document.createElement('div');
                 summaryBubble.classList.add('summary-bubble');
-                summaryBubble.textContent = data.summary;
+                // allow pretty JSON if summary is an object
+                summaryBubble.innerHTML = typeof data.summary === 'object'
+                ? formatValue(data.summary)
+                : escapeHtml(String(data.summary));
                 chatBox.appendChild(summaryBubble);
             }
 
             if (data.recommendations && Array.isArray(data.recommendations)) {
                 data.recommendations.forEach(rec => {
-                    const card = document.createElement('div');
-                    card.classList.add('recommendation-card');
-                    card.innerHTML = `
-                        <h3>${rec.title || ''}</h3>
-                        <p><strong>Einkommen:</strong> ${rec.income || 'N/A'}</p>
-                        <p><strong>Begründung:</strong> ${rec.reasoning || 'N/A'}</p>
-                    `;
-                    chatBox.appendChild(card);
+                const card = document.createElement('div');
+                card.classList.add('recommendation-card');
+                card.innerHTML = `
+                    <h3>${escapeHtml(rec.title || '')}</h3>
+                    <p><strong>Einkommen:</strong> ${formatValue(rec.income)}</p>
+                    <p><strong>Begründung:</strong> ${formatValue(rec.reasoning)}</p>
+                `;
+                chatBox.appendChild(card);
                 });
             }
             chatBox.scrollTop = chatBox.scrollHeight;
