@@ -198,7 +198,8 @@
 
         // --- STATE ---
         let chatHistory = [];
-        let currentToolCallId = null; 
+        // This is no longer needed as the backend handles interruptions
+        // let currentToolCallId = null; 
 
         // --- FUNCTIONS ---
 
@@ -242,7 +243,7 @@
         /**
          * Handles the form submission event.
          */
-         async function handleFormSubmit(event) {
+        async function handleFormSubmit(event) {
             event.preventDefault();
             const userMessage = userInput.value.trim();
             if (!userMessage) return;
@@ -263,7 +264,8 @@
             try {
                 const payload = {
                     user_input: userMessage,
-                    chat_history: chatHistory.slice(0, -1)
+                    // Send the full history, the backend can slice if needed
+                    chat_history: chatHistory.slice(0, -1) 
                 };
                 
                 const response = await fetch(API_URL, {
@@ -271,41 +273,48 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
+                
+                // Remove the loading bubble as soon as we get a response
+                chatBox.removeChild(loadingBubble);
 
-                if (!response.ok) throw new Error(`API error: ${response.statusText}`);
+                if (!response.ok) {
+                    // Try to get a more detailed error message from the API response
+                    const errorData = await response.json().catch(() => null);
+                    const detail = errorData?.detail || response.statusText;
+                    throw new Error(`API error: ${detail}`);
+                }
 
                 const data = await response.json();
                 const agentResponse = data.response;
                 
-                // 1. Remove the loading bubble FIRST for a smooth transition
-                chatBox.removeChild(loadingBubble);
-
-                // 2. Use a single, clean block to handle the response
+                // This is the crucial logic block. It ensures the correct function is called.
                 if (typeof agentResponse === 'object' && agentResponse !== null) {
-                    // It's a JSON object for recommendations
+                    // If the response is an object, it's for recommendations.
+                    // Use the special rendering function.
                     renderRecommendations(agentResponse);
-                    // Push the GUARANTEED-STRING version to the history
+                    // For the history, save the object as a string.
                     chatHistory.push({ type: 'ai', content: JSON.stringify(agentResponse) });
                 } else {
-                    // It's a simple text message
+                    // If the response is NOT an object, it's a simple text message.
+                    // Use the simple text message function.
                     addMessageToUI('agent', agentResponse);
-                    // Push the GUARANTEED-STRING version to the history
+                    // For the history, save the string directly.
                     chatHistory.push({ type: 'ai', content: agentResponse });
                 }
 
             } catch (error) {
                 console.error("Error fetching from API:", error);
-                // Make sure to remove the loading bubble even if there's an error
                 if (chatBox.contains(loadingBubble)) {
                     chatBox.removeChild(loadingBubble);
                 }
-                addMessageToUI('agent', 'Sorry, something went wrong. Please try again.');
+                addMessageToUI('agent', `Sorry, something went wrong. Please try again. Error: ${error.message}`);
             } finally {
                 userInput.disabled = false;
                 sendButton.disabled = false;
                 userInput.focus();
             }
         }
+
         // --- EVENT LISTENERS ---
         chatForm.addEventListener('submit', handleFormSubmit);
     </script>
